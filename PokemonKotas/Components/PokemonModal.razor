@@ -1,0 +1,41 @@
+﻿<div class="modal fade @((IsVisible ? "show" : ""))" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <h5 class="modal-title">@PokemonName</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
+            </div>
+            <div class="modal-body">
+                <img src="@ImageUrl" alt="@PokemonName" class="pokemon-image img-fluid" />
+                <ul class="list-unstyled mt-3">
+                    @foreach (var attack in Attacks)
+                    {
+                        <li>@attack</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (IsVisible)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    [Parameter] public string PokemonName { get; set; } = string.Empty;
+    [Parameter] public string ImageUrl { get; set; } = string.Empty;
+    [Parameter] public List<string> Attacks { get; set; } = new();
+    private bool IsVisible { get; set; } = false;
+
+    public void ShowModal()
+    {
+        IsVisible = true;
+    }
+
+    public void CloseModal()
+    {
+        IsVisible = false;
+    }
+}
