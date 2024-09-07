@@ -14,12 +14,17 @@
     </div>
 </div>
 
-<div class="pokedex row">
+
+<h1 class="title-151">
+    Só existem 151 Pokémons, <span class="highlight">por favor não insista!</span> 😡 <span class="spoiler">bom.. 152 se contar o missígno.</span>
+</h1>
+
+<div class="pokedex row justify-content-center">
     @foreach (var pokemon in GetPagedPokemons())
     {
-        <div class="pokemon-card" data-bs-toggle="modal" data-bs-target="#pokemonModal" @onclick="@(() => ShowPokemonModal(pokemon))">
+        <div class="pokemon-card col-auto" data-bs-toggle="modal" data-bs-target="#pokemonModal" @onclick="@(() => ShowPokemonModal(pokemon))">
             <img src="@pokemon.Sprites.OrderBy(x => Guid.NewGuid()).FirstOrDefault()" alt="@pokemon.Name">
-            <h5>@pokemon.Name</h5>
+            <h5>@pokemon.Name.ToUpper()</h5>
         </div>
     }
 </div>
