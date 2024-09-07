@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PokemonKotas.Data\PokemonKotas.Data.csproj" />
+  </ItemGroup>
+
 </Project>

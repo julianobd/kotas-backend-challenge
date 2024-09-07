@@ -64,12 +64,12 @@ namespace PokemonKotas.Infra.Services
             {
                 Id = x.Id,
                 Name = x.Name,
-                Sprites = x.Pokemon_v2_pokemonsprites.Where(y => y.Sprites != null).Select(y => y.Sprites),
+                Sprites = x.Pokemon_v2_pokemonsprites.Where(y => y.Sprites != null).Select(y => y.Sprites).ToList(),
                 Abilities = x.Pokemon_v2_pokemonabilities.Select(y => new PokemonAbilityDto()
                 {
-                    Id = y.Pokemon_v2_ability?.Id,
+                    Id = y.Pokemon_v2_ability.Id,
                     Name = y.Pokemon_v2_ability?.Name
-                }),
+                }).ToList(),
                 EvolutionChain = x.Pokemon_v2_pokemonspecy.Pokemon_v2_evolutionchain.Pokemon_v2_pokemonspecies.Select(
                     y => new PokemonEvolutionChainDto()
                     {
@@ -80,8 +80,8 @@ namespace PokemonKotas.Infra.Services
                         Order = y.Order,
                         Sprites = y.Pokemon_v2_pokemons.SelectMany(z => z.Pokemon_v2_pokemonsprites)
                             .Where(z => z.Sprites != null)
-                            .Select(z => z.Sprites)
-                    })
+                            .Select(z => z.Sprites).ToList()
+                    }).ToList()
             }).OrderBy(x => x.Id);
         }
     }

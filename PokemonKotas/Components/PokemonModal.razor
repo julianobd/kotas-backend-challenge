@@ -1,4 +1,7 @@
 ﻿@using PokemonKotas.Domain.Dto
+@using PokemonKotas.Web.Services
+@inject WebClientService WebClientService
+@inject SessionService SessionService
 <div class="modal fade @((IsVisible ? "show" : ""))" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content text-center">
@@ -7,60 +10,88 @@
                 <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
             </div>
             <div class="modal-body">
-                <img src="@Pokemon?.Sprites.OrderBy(x => Guid.NewGuid()).FirstOrDefault()" alt="@Pokemon?.Name" class="pokemon-image img-fluid" />
-                
-                <h6 class="mt-4">Attacks</h6>
-                <ul class="list-group">
-                    @if (Pokemon != null && Pokemon.Abilities.Any())
-                    {
-                        foreach (var attack in Pokemon.Abilities)
+                @if (!IsSignup)
+                {
+                    <img src="@Pokemon?.Sprites.OrderBy(x => Guid.NewGuid()).FirstOrDefault()" alt="@Pokemon?.Name" class="pokemon-image img-fluid" />
+
+                    <h6 class="mt-4">Attacks</h6>
+                    <ul class="list-group">
+                        @if (Pokemon != null && Pokemon.Abilities.Any())
                         {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                @attack.Name
-                                <span class="badge bg-primary rounded-pill">@attack.Id</span>
-                            </li>
+                            foreach (var attack in Pokemon.Abilities)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @attack.Name
+                                    <span class="badge bg-primary rounded-pill">@attack.Id</span>
+                                </li>
+                            }
                         }
-                    }
-                    else
-                    {
-                        <li class="list-group-item">No attacks available.</li>
-                    }
-                </ul>
-                
-                <h6 class="mt-4">Evolutions</h6>
-                <ul class="list-group">
-                    @if (Pokemon != null && Pokemon.EvolutionChain.Any())
-                    {
-                        foreach (var evolution in Pokemon.EvolutionChain)
+                        else
                         {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span class="badge bg-success">@evolution.Name.ToUpper()</span>
-                                <span class="badge bg-success">@evolution.Id</span>
-                                @if (evolution.IsLegendary)
-                                {
-                                    <span class="badge bg-warning text-dark">Legendary</span>
-                                } else if (evolution.IsMythical)
-                                {
-                                    <span class="badge bg-danger">Mythical</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-success">Normal</span>
-                                }
-                            </li>
+                            <li class="list-group-item">No attacks available.</li>
                         }
-                    }
-                    else
+                    </ul>
+
+                    <h6 class="mt-4">Evolutions</h6>
+                    <ul class="list-group">
+                        @if (Pokemon != null && Pokemon.EvolutionChain.Any())
+                        {
+                            foreach (var evolution in Pokemon.EvolutionChain)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-success">@evolution.Name.ToUpper()</span>
+                                    <span class="badge bg-success">@evolution.Id</span>
+                                    @if (evolution.IsLegendary)
+                                    {
+                                        <span class="badge bg-warning text-dark">Legendary</span>
+                                    }
+                                    else if (evolution.IsMythical)
+                                    {
+                                        <span class="badge bg-danger">Mythical</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Normal</span>
+                                    }
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="list-group-item">No evolutions available.</li>
+                        }
+                    </ul>
+
+                    @if (!IsCaptured && !CapturedPokemons.Select(x => x.Name).Contains(Pokemon?.Name))
                     {
-                        <li class="list-group-item">No evolutions available.</li>
+                        <div class="mt-4">
+                            <button class="btn btn-success" @onclick="CapturePokemon">@(IsRegistered ? "Capture Pokémon" : "Register")</button>
+                        </div>
                     }
-                </ul>
-                
-                
-                <div class="mt-4">
-                    <button class="btn btn-success" @onclick="CapturePokemon">Capture Pokémon</button>
-                </div>
+                    else if (CapturedPokemons.Select(x => x.Name).Contains(Pokemon?.Name))
+                    {
+                        <span class="badge bg-info">Captured</span>
+                    }
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" class="form-control" @bind="UserName" placeholder="Digite seu nome" />
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="idade">Idade</label>
+                        <input type="number" id="idade" class="form-control" @bind="UserAge" placeholder="Digite sua idade" />
+                    </div>
+                }
             </div>
+            @if (IsSignup)
+            {
+                <div class="modal-footer">
+                    <button class="btn btn-primary" @onclick="RegisterUser">Registrar</button>
+                    <button class="btn btn-secondary" @onclick="CloseModal">Cancelar</button>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -71,13 +102,35 @@
 }
 
 @code {
+    private string UserName { get; set; } = string.Empty;
+    private int UserAge { get; set; }
+
+    private bool IsSignup { get; set; } = false;
+    private bool IsCaptured { get; set; } = false;
     private bool IsVisible { get; set; } = false;
+    private bool IsRegistered { get; set; } = false;
+    private int MasterId { get; set; }
     private PokemonDto? Pokemon { get; set; }
-    public void ShowModal(PokemonDto pokemon)
+    private List<PokemonDto> CapturedPokemons { get; set; } = new();
+
+
+    public void ShowModal(PokemonDto pokemon, List<PokemonDto> capturedPokemons)
     {
+        CapturedPokemons = capturedPokemons;
+        IsSignup = false;
         Pokemon = pokemon;
         IsVisible = true;
         StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var masterId = await SessionService.GetMasterId();
+        if (masterId != null)
+        {
+            IsRegistered = true;
+            MasterId = masterId.Value;
+        }
     }
 
     public void CloseModal()
@@ -88,7 +141,42 @@
 
     private async Task CapturePokemon()
     {
-        throw new NotImplementedException();
+        if (!IsRegistered)
+        {
+            IsSignup = true;
+        }
+        else
+        {
+            var result = await WebClientService.PutAsync<PokemonDto, bool>($"MasterPokemon/AddCapturedPokemon/{MasterId}", Pokemon!);
+            if (result)
+            {
+                CapturedPokemons.Add(Pokemon!);
+                IsSignup = false;
+            }
+        }
+        StateHasChanged();
+    }
+
+    private async Task RegisterUser()
+    {
+        if (UserAge > 0 && !string.IsNullOrEmpty(UserName) && Pokemon is not null)
+        {
+            var masterPokemon = new MasterPokemonDto
+            {
+                Name = UserName,
+                Age = UserAge,
+                CapturedPokemons = Pokemon != null ? [Pokemon] : []
+            };
+
+            var result = await WebClientService.PostAsync<MasterPokemonDto, int>("MasterPokemon/AddMasterPokemon", masterPokemon);
+            if (result > 0)
+            {
+                IsRegistered = true;
+                await SessionService.SetMasterId(result);
+                IsSignup = false;
+                CapturedPokemons.Add(Pokemon!);
+            }
+        }
     }
 
 }

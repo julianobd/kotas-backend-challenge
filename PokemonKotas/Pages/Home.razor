@@ -2,7 +2,11 @@
 @using PokemonKotas.Domain.Dto
 @using PokemonKotas.Domain.Interfaces
 @using PokemonKotas.Web.Components
+@using PokemonKotas.Web.Services
 @inject IPokemonService PokemonService
+@inject SessionService SessionService
+@inject WebClientService WebClientService
+
 <PageTitle>Home</PageTitle>
 
 <h1 class="text-center my-4">Pokédex</h1>
@@ -19,6 +23,18 @@
     Só existem 151 Pokémons, <span class="highlight">por favor não insista!</span> 😡 <span class="spoiler">bom.. 152 se contar o missígno.</span>
 </h1>
 
+
+<div class="pokedex row justify-content-center">
+    @foreach (var pokemon in CapturedPokemons)
+    {
+        <div class="pokemon-card col-auto" data-bs-toggle="modal" data-bs-target="#pokemonModal" @onclick="@(() => ShowPokemonModal(pokemon))">
+            <img src="@pokemon.Sprites.OrderBy(x => Guid.NewGuid()).FirstOrDefault()" alt="@pokemon.Name">
+            <h5>@pokemon.Name.ToUpper()</h5>
+            <span class="badge bg-info">Captured</span>
+        </div>
+    }
+</div>
+
 <div class="pokedex row justify-content-center">
     @foreach (var pokemon in GetPagedPokemons())
     {
@@ -29,12 +45,11 @@
     }
 </div>
 
-<PokemonModal @ref="PokemonModal"/>
-
+<PokemonModal @ref="PokemonModal" />
 
 <ul class="pagination">
     <li class="@(CurrentPage == 1 ? "disabled" : "")"><a href="javascript:void(0);" @onclick="PreviousPage">Previous</a></li>
-    
+
     @foreach (var i in GetPageNumbers())
     {
         <li class="page-item @(CurrentPage == i ? "active" : "")">
@@ -66,6 +81,7 @@
     private PokemonModal? PokemonModal { get; set; }
     private List<PokemonDto> ListPokemons { get; set; } = [];
     private List<PokemonDto> FilteredPokemons { get; set; } = [];
+    private List<PokemonDto> CapturedPokemons { get; set; } = [];
     private int CurrentPage { get; set; } = 1;
     private int PageSize { get; set; } = 20;
     private int TotalPages => (int)Math.Ceiling((double)FilteredPokemons.Count() / PageSize);
@@ -77,10 +93,27 @@
         FilteredPokemons = ListPokemons;
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var masterId = await SessionService.GetMasterId();
+            if (masterId != null)
+            {
+                var masterPokemonDto = await WebClientService.GetAsync<MasterPokemonDto>($"MasterPokemon/Get/{masterId}");
+                if (masterPokemonDto is not null && masterPokemonDto.CapturedPokemons.Any())
+                {
+                    CapturedPokemons = masterPokemonDto.CapturedPokemons;
+                }
+
+            }
+        }
+    }
+
 
     private void ShowPokemonModal(PokemonDto pokemon)
     {
-        PokemonModal?.ShowModal(pokemon);
+        PokemonModal?.ShowModal(pokemon, CapturedPokemons);
     }
 
     private void FilterPokemon()
@@ -101,7 +134,7 @@
     private IEnumerable<PokemonDto> GetPagedPokemons()
     {
         return FilteredPokemons
-            .Skip((CurrentPage - 1) * PageSize)  
+            .Skip((CurrentPage - 1) * PageSize)
             .Take(PageSize);
     }
 
