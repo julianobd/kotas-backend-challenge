@@ -14,13 +14,13 @@ namespace PokemonKotas.Domain.Interfaces
         /// </summary>
         /// <param name="pokemonId">The unique identifier of the Pokémon.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the Pokémon data transfer object if found; otherwise, null.</returns>
-        Task<PokemonDto?> GetPokemonByIdAsync(int pokemonId);
+        ValueTask<PokemonDto?> GetPokemonByIdAsync(int pokemonId);
 
         /// <summary>
         /// Retrieves a specified amount of random Pokémon data.
         /// </summary>
         /// <param name="ammount">The number of random Pokémon to retrieve.</param>
         /// <returns>A collection of <see cref="PokemonDto"/> representing the random Pokémon.</returns>
-        Task<IEnumerable<PokemonDto>> GetRandomPokemons(int ammount);
+        ValueTask<IEnumerable<PokemonDto>> GetRandomPokemons(int ammount);
     }
 }

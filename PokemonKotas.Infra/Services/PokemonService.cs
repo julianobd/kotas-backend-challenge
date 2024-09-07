@@ -21,8 +21,8 @@ namespace PokemonKotas.Infra.Services
         /// Retrieves a Pokémon by its unique identifier.
         /// </summary>
         /// <param name="pokemonId">The unique identifier of the Pokémon.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the Pokémon data transfer object if found; otherwise, null.</returns>
-        public async Task<PokemonDto?> GetPokemonByIdAsync(int pokemonId)
+        /// <returns>The ValueTask result contains the Pokémon data transfer object if found; otherwise, null.</returns>
+        public async ValueTask<PokemonDto?> GetPokemonByIdAsync(int pokemonId)
         {
             var pokemons = await cacheService.GetPokemons(pokemonClient);
             var pokemonDto = pokemons.Data.Pokemon_v2_pokemon.Where(x => x.Id == pokemonId).Select(x => new PokemonDto()
@@ -53,8 +53,8 @@ namespace PokemonKotas.Infra.Services
         /// Retrieves a specified amount of random Pokémon data.
         /// </summary>
         /// <param name="ammount">The number of random Pokémon to retrieve.</param>
-        /// <returns>A collection of <see cref="PokemonDto"/> representing the random Pokémon.</returns>
-        public async Task<IEnumerable<PokemonDto>> GetRandomPokemons(int ammount)
+        /// <returns>ValueTask containing a collection of <see cref="PokemonDto"/> representing the random Pokémon.</returns>
+        public async ValueTask<IEnumerable<PokemonDto>> GetRandomPokemons(int ammount)
         {
             var pokemons = await cacheService.GetPokemons(pokemonClient);
             var pokemonDto = pokemons.Data.Pokemon_v2_pokemon.Select(x => new PokemonDto()
