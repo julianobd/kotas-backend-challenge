@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonKotas.Domain", "Poke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonKotas.Infra", "PokemonKotas.Infra\PokemonKotas.Infra.csproj", "{BE016837-9D49-42A0-9564-AF28A276C0C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonKotas.Tests", "PokemonKotas.Tests\PokemonKotas.Tests.csproj", "{BDAE3239-C446-422F-A1B4-C257B5480681}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{BE016837-9D49-42A0-9564-AF28A276C0C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE016837-9D49-42A0-9564-AF28A276C0C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE016837-9D49-42A0-9564-AF28A276C0C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDAE3239-C446-422F-A1B4-C257B5480681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDAE3239-C446-422F-A1B4-C257B5480681}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDAE3239-C446-422F-A1B4-C257B5480681}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDAE3239-C446-422F-A1B4-C257B5480681}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

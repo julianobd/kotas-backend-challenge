@@ -1,0 +1,30 @@
+query GetPokemons {
+  pokemon_v2_pokemon {
+    id
+    name
+    pokemon_v2_pokemonabilities {
+      pokemon_v2_ability {
+        id
+        name
+      }
+    }
+    pokemon_v2_pokemonspecy {
+      pokemon_v2_evolutionchain {
+        id
+        pokemon_v2_pokemonspecies {
+          evolves_from_species_id
+          id
+          name
+          order
+          is_legendary
+          is_mythical
+          pokemon_v2_pokemons {
+            pokemon_v2_pokemonsprites {
+              sprites(path: "other.official-artwork.front_default")
+            }
+          }
+        }
+      }
+    }
+  }
+}
