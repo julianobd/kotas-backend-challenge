@@ -1,18 +1,65 @@
-﻿<div class="modal fade @((IsVisible ? "show" : ""))" tabindex="-1" role="dialog">
+﻿@using PokemonKotas.Domain.Dto
+<div class="modal fade @((IsVisible ? "show" : ""))" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content text-center">
             <div class="modal-header">
-                <h5 class="modal-title">@PokemonName</h5>
+                <h5 class="modal-title">@Pokemon?.Name.ToUpper()</h5>
                 <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
             </div>
             <div class="modal-body">
-                <img src="@ImageUrl" alt="@PokemonName" class="pokemon-image img-fluid" />
-                <ul class="list-unstyled mt-3">
-                    @foreach (var attack in Attacks)
+                <img src="@Pokemon?.Sprites.OrderBy(x => Guid.NewGuid()).FirstOrDefault()" alt="@Pokemon?.Name" class="pokemon-image img-fluid" />
+                
+                <h6 class="mt-4">Attacks</h6>
+                <ul class="list-group">
+                    @if (Pokemon != null && Pokemon.Abilities.Any())
                     {
-                        <li>@attack</li>
+                        foreach (var attack in Pokemon.Abilities)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @attack.Name
+                                <span class="badge bg-primary rounded-pill">@attack.Id</span>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item">No attacks available.</li>
                     }
                 </ul>
+                
+                <h6 class="mt-4">Evolutions</h6>
+                <ul class="list-group">
+                    @if (Pokemon != null && Pokemon.EvolutionChain.Any())
+                    {
+                        foreach (var evolution in Pokemon.EvolutionChain)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success">@evolution.Name.ToUpper()</span>
+                                <span class="badge bg-success">@evolution.Id</span>
+                                @if (evolution.IsLegendary)
+                                {
+                                    <span class="badge bg-warning text-dark">Legendary</span>
+                                } else if (evolution.IsMythical)
+                                {
+                                    <span class="badge bg-danger">Mythical</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Normal</span>
+                                }
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item">No evolutions available.</li>
+                    }
+                </ul>
+                
+                
+                <div class="mt-4">
+                    <button class="btn btn-success" @onclick="CapturePokemon">Capture Pokémon</button>
+                </div>
             </div>
         </div>
     </div>
@@ -24,18 +71,24 @@
 }
 
 @code {
-    [Parameter] public string PokemonName { get; set; } = string.Empty;
-    [Parameter] public string ImageUrl { get; set; } = string.Empty;
-    [Parameter] public List<string> Attacks { get; set; } = new();
     private bool IsVisible { get; set; } = false;
-
-    public void ShowModal()
+    private PokemonDto? Pokemon { get; set; }
+    public void ShowModal(PokemonDto pokemon)
     {
+        Pokemon = pokemon;
         IsVisible = true;
+        StateHasChanged();
     }
 
     public void CloseModal()
     {
         IsVisible = false;
+        StateHasChanged();
     }
+
+    private async Task CapturePokemon()
+    {
+        throw new NotImplementedException();
+    }
+
 }

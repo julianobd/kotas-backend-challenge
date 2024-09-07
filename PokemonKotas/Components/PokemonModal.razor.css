@@ -44,6 +44,8 @@
     max-width: 200px;
     margin: 0 auto;
     display: block;
+    border-radius: 50%;
+    border: 3px solid #007bff;
 }
 
 .modal-content {
@@ -79,3 +81,11 @@
     .btn-close:hover {
         background-color: #ffcc00;
     }
+
+.list-group-item {
+    background-color: #ffe680;
+}
+
+.badge {
+    font-size: 1rem;
+}

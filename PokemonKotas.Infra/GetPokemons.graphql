@@ -1,5 +1,5 @@
-query GetPokemons {
-  pokemon_v2_pokemon {
+query GetAllPokemons {
+  pokemon_v2_pokemon(where: { id: { _lte: 151 } }) {
     id
     name
     pokemon_v2_pokemonabilities {
@@ -7,6 +7,9 @@ query GetPokemons {
         id
         name
       }
+    }
+    pokemon_v2_pokemonsprites {
+      sprites(path: "other.official-artwork.front_default")
     }
     pokemon_v2_pokemonspecy {
       pokemon_v2_evolutionchain {

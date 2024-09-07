@@ -13,6 +13,7 @@ namespace PokemonKotas.Domain.Dto
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+        public IEnumerable<string?> Sprites { get; set; } = null!;
         public IEnumerable<PokemonAbilityDto> Abilities { get; set; } = [];
         public IEnumerable<PokemonEvolutionChainDto> EvolutionChain { get; set; } = [];
     }

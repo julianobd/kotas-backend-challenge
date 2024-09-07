@@ -34449,7 +34449,7 @@ type pokemon_v2_pokemonsprites {
   pokemon_id: Int
   "An object relationship"
   pokemon_v2_pokemon: pokemon_v2_pokemon
-  sprites("JSON select path" path: String): jsonb!
+  sprites("JSON select path" path: String): jsonb
 }
 
 "aggregated selection of \"pokemon_v2_pokemonsprites\""

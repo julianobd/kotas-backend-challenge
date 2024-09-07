@@ -11,14 +11,13 @@ using StrawberryShake;
 namespace PokemonKotas.Infra.Services
 {
     /// <summary>
-    /// Defines a service for caching and retrieving data.
+    /// Provides caching services for retrieving and storing data.
     /// </summary>
     /// <typeparam name="TOut">The type of the data to be retrieved from the cache.</typeparam>
     /// <typeparam name="TIn">The type of the client used to fetch data if it is not found in the cache.</typeparam>
-    public class CacheService<TOut, TIn> : ICacheService<TOut, TIn>
+    /// <param name="cache">The memory cache instance used for storing and retrieving cached data.</param>
+    public class CacheService<TOut, TIn>(IMemoryCache cache) : ICacheService<TOut, TIn>
     {
-        private static readonly MemoryCache Cache = new MemoryCache(new MemoryCacheOptions());
-
         /// <summary>
         /// Retrieves a collection of data from the cache or fetches them from the provided client if not cached.
         /// </summary>
@@ -27,10 +26,11 @@ namespace PokemonKotas.Infra.Services
         public async ValueTask<TOut?> GetPokemons(TIn pokemonClient)
         {
             if (pokemonClient is null) throw new ArgumentNullException(nameof(pokemonClient));
-            if (Cache.TryGetValue<StrawberryShake.IOperationResult<IGetPokemonsResult>>("pokemons", 
+            if (cache.TryGetValue<StrawberryShake.IOperationResult<IGetAllPokemonsResult>>("pokemons", 
                     out var resultCache)) return (TOut)resultCache!;
-            var result = await  (((IPokemonClient)pokemonClient)!).GetPokemons.ExecuteAsync();
-            Cache.Set("pokemons", result, TimeSpan.FromMinutes(30));
+            var result = await  (((IPokemonClient)pokemonClient)!).GetAllPokemons.ExecuteAsync();
+            result.EnsureNoErrors();
+            cache.Set("pokemons", result, TimeSpan.FromMinutes(30));
             return (TOut)result!;
         }
     }

@@ -1,44 +1,42 @@
 ﻿@page "/"
+@using PokemonKotas.Domain.Dto
+@using PokemonKotas.Domain.Interfaces
 @using PokemonKotas.Web.Components
-
+@inject IPokemonService PokemonService
 <PageTitle>Home</PageTitle>
 
 <h1 class="text-center my-4">Pokédex</h1>
 
 <div class="search-container">
     <div class="input-group search-box">
-        <input type="text" class="form-control" placeholder="Search Pokémon..." id="search">
-        <button class="btn btn-primary" type="button">Search</button>
+        <input @bind="SearchPokemon" type="text" class="form-control" placeholder="Search Pokémon..." id="search">
+        <button class="btn btn-primary" type="button" @onclick="FilterPokemon">Search</button>
     </div>
 </div>
 
 <div class="pokedex row">
-    <div class="pokemon-card" data-bs-toggle="modal" data-bs-target="#pokemonModal" @onclick="ShowPokemonModal">
-        <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png" alt="Bulbasaur">
-        <h5>Bulbasaur</h5>
-    </div>
-    <div class="pokemon-card" data-bs-toggle="modal" data-bs-target="#pokemonModal" @onclick="ShowPokemonModal">
-        <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/004.png" alt="Charmander">
-        <h5>Charmander</h5>
-    </div>
-    <div class="pokemon-card" data-bs-toggle="modal" data-bs-target="#pokemonModal" @onclick="ShowPokemonModal">
-        <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/007.png" alt="Squirtle">
-        <h5>Squirtle</h5>
-    </div>
-    <!-- Add more Pokémon here -->
+    @foreach (var pokemon in GetPagedPokemons())
+    {
+        <div class="pokemon-card" data-bs-toggle="modal" data-bs-target="#pokemonModal" @onclick="@(() => ShowPokemonModal(pokemon))">
+            <img src="@pokemon.Sprites.OrderBy(x => Guid.NewGuid()).FirstOrDefault()" alt="@pokemon.Name">
+            <h5>@pokemon.Name</h5>
+        </div>
+    }
 </div>
 
-<PokemonModal @ref="_pokemonModal" PokemonName="Pikachu" ImageUrl="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/007.png" Attacks="@(new List<string> { "Thunder Shock", "Quick Attack", "Iron Tail", "Electro Ball" })" />
+<PokemonModal @ref="PokemonModal"/>
 
 
 <ul class="pagination">
-    <li class="disabled"><a href="#">Previous</a></li>
-    <li class="active"><a href="#">1</a></li>
-    <li><a href="#">2</a></li>
-    <li><a href="#">3</a></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li><a href="#">Next</a></li>
+    <li class="@(CurrentPage == 1 ? "disabled" : "")"><a href="javascript:void(0);" @onclick="PreviousPage">Previous</a></li>
+    
+    @foreach (var i in GetPageNumbers())
+    {
+        <li class="page-item @(CurrentPage == i ? "active" : "")">
+            <a class="page-link" href="javascript:void(0);" @onclick="() => { GoToPage(i); }">@i</a>
+        </li>
+    }
+    <li class="@(CurrentPage == TotalPages ? "disabled" : "")"><a href="javascript:void(0);" @onclick="NextPage">Next</a></li>
 </ul>
 
 <div class="modal fade" id="pokemonModal" tabindex="-1" aria-labelledby="pokemonModalLabel" aria-hidden="true">
@@ -59,13 +57,83 @@
 
 @code
 {
-    private PokemonModal? _pokemonModal;
+    private string? SearchPokemon { get; set; }
+    private PokemonModal? PokemonModal { get; set; }
+    private List<PokemonDto> ListPokemons { get; set; } = [];
+    private List<PokemonDto> FilteredPokemons { get; set; } = [];
+    private int CurrentPage { get; set; } = 1;
+    private int PageSize { get; set; } = 20;
+    private int TotalPages => (int)Math.Ceiling((double)FilteredPokemons.Count() / PageSize);
+    private int MaxVisiblePages { get; set; } = 5;
 
-    /// <summary>
-    /// Displays the Pokémon modal by setting the visibility of the modal to true.
-    /// </summary>
-    public void ShowPokemonModal()
+    protected override async Task OnInitializedAsync()
     {
-        _pokemonModal?.ShowModal();
+        ListPokemons = (await PokemonService.GetAllPokemons()).ToList();
+        FilteredPokemons = ListPokemons;
+    }
+
+
+    private void ShowPokemonModal(PokemonDto pokemon)
+    {
+        PokemonModal?.ShowModal(pokemon);
+    }
+
+    private void FilterPokemon()
+    {
+        if (string.IsNullOrWhiteSpace(SearchPokemon))
+        {
+            FilteredPokemons = ListPokemons;
+        }
+        else
+        {
+            FilteredPokemons = ListPokemons
+                .Where(x => x.Name.Contains(SearchPokemon, StringComparison.OrdinalIgnoreCase) || x.Id.ToString().Equals(SearchPokemon)).ToList();
+        }
+        CurrentPage = 1;
+        StateHasChanged();
+    }
+
+    private IEnumerable<PokemonDto> GetPagedPokemons()
+    {
+        return FilteredPokemons
+            .Skip((CurrentPage - 1) * PageSize)  
+            .Take(PageSize);
+    }
+
+    private void GoToPage(int pageNumber)
+    {
+        CurrentPage = pageNumber;
+        StateHasChanged();
+    }
+
+    private void PreviousPage()
+    {
+        if (CurrentPage > 1)
+        {
+            CurrentPage--;
+            StateHasChanged();
+        }
+    }
+
+    private IEnumerable<int> GetPageNumbers()
+    {
+        int startPage = Math.Max(CurrentPage - MaxVisiblePages / 2, 1);
+        int endPage = Math.Min(startPage + MaxVisiblePages - 1, TotalPages);
+
+        if (endPage - startPage + 1 < MaxVisiblePages && startPage > 1)
+        {
+            startPage = Math.Max(endPage - MaxVisiblePages + 1, 1);
+        }
+
+        return Enumerable.Range(startPage, endPage - startPage + 1);
+    }
+
+    private void NextPage()
+    {
+        if (CurrentPage < TotalPages)
+        {
+            CurrentPage++;
+            StateHasChanged();
+        }
     }
 }
