@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigins",
         corsPolicyBuilder =>
         {
-            corsPolicyBuilder.WithOrigins("https://localhost:7013", "http://localhost:5022", "https://front-pokemon.deiro.dev.br")
+            corsPolicyBuilder.WithOrigins("https://localhost:4041", "http://localhost:4040", "https://front-pokemon.deiro.dev.br")
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
