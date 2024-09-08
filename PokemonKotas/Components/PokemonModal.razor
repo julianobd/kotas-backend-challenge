@@ -2,17 +2,17 @@
 @using PokemonKotas.Web.Services
 @inject WebClientService WebClientService
 @inject SessionService SessionService
-<div class="modal fade @((IsVisible ? "show" : ""))" tabindex="-1" role="dialog">
+<div class="modal fade @(IsVisible ? "show" : "")" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content text-center">
+        <div class="modal-content text-center @(Pokemon is { IsMythical: true } ? "mythical" : Pokemon is { IsLegendary: true } ? "legendary" : "")">
             <div class="modal-header">
-                <h5 class="modal-title">@Pokemon?.Name.ToUpper()</h5>
+                <h5 class="modal-title @(Pokemon is { IsMythical: true } ? "shiny-text-mythical" : Pokemon is { IsLegendary: true } ? "shiny-text-legendary" : "")">@Pokemon?.Name.ToUpper()</h5>
                 <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
             </div>
             <div class="modal-body">
                 @if (!IsSignup)
                 {
-                    <img src="@Pokemon?.Sprites.OrderBy(x => Guid.NewGuid()).FirstOrDefault()" alt="@Pokemon?.Name" class="pokemon-image img-fluid" />
+                    <img src="@Pokemon?.Sprites.OrderBy(x => Guid.NewGuid()).FirstOrDefault()" alt="@Pokemon?.Name" class="pokemon-image img-fluid"/>
 
                     <h6 class="mt-4">Attacks</h6>
                     <ul class="list-group">
@@ -43,11 +43,11 @@
                                     <span class="badge bg-success">@evolution.Id</span>
                                     @if (evolution.IsLegendary)
                                     {
-                                        <span class="badge bg-warning text-dark">Legendary</span>
+                                        <span class="badge bg-warning text-dark shiny-text-legendary">Legendary</span>
                                     }
                                     else if (evolution.IsMythical)
                                     {
-                                        <span class="badge bg-danger">Mythical</span>
+                                        <span class="badge bg-danger shiny-text-mythical">Mythical</span>
                                     }
                                     else
                                     {
@@ -77,11 +77,11 @@
                 {
                     <div class="form-group">
                         <label for="nome">Nome</label>
-                        <input type="text" id="nome" class="form-control" @bind="UserName" placeholder="Digite seu nome" />
+                        <input type="text" id="nome" class="form-control" @bind="UserName" placeholder="Digite seu nome"/>
                     </div>
                     <div class="form-group mt-3">
                         <label for="idade">Idade</label>
-                        <input type="number" id="idade" class="form-control" @bind="UserAge" placeholder="Digite sua idade" />
+                        <input type="number" id="idade" class="form-control" @bind="UserAge" placeholder="Digite sua idade"/>
                     </div>
                 }
             </div>
@@ -95,16 +95,16 @@
         </div>
     </div>
 </div>
-
 @if (IsVisible)
 {
     <div class="modal-backdrop fade show"></div>
 }
 
+
 @code {
     private string UserName { get; set; } = string.Empty;
     private int UserAge { get; set; }
-
+    private bool IsLoading { get; set; } = false;
     private bool IsSignup { get; set; } = false;
     private bool IsCaptured { get; set; } = false;
     private bool IsVisible { get; set; } = false;
@@ -112,10 +112,14 @@
     private int MasterId { get; set; }
     private PokemonDto? Pokemon { get; set; }
     private List<PokemonDto> CapturedPokemons { get; set; } = new();
+    private Func<Task> CallbackOnClose { get; set; } = null!;
+    private Func<bool, Task> ChangeLoading { get; set; } = null!;
 
 
-    public void ShowModal(PokemonDto pokemon, List<PokemonDto> capturedPokemons)
+    public void ShowModal(PokemonDto pokemon, List<PokemonDto> capturedPokemons, Func<Task> callbackOnClose, Func<bool, Task> loading)
     {
+        ChangeLoading = loading;
+        CallbackOnClose = callbackOnClose;
         CapturedPokemons = capturedPokemons;
         IsSignup = false;
         Pokemon = pokemon;
@@ -133,10 +137,11 @@
         }
     }
 
-    public void CloseModal()
+    public async Task CloseModal()
     {
         IsVisible = false;
         StateHasChanged();
+        await CallbackOnClose.Invoke();
     }
 
     private async Task CapturePokemon()
@@ -147,13 +152,17 @@
         }
         else
         {
+            await ChangeLoading.Invoke(true);
             var result = await WebClientService.PutAsync<PokemonDto, bool>($"MasterPokemon/AddCapturedPokemon/{MasterId}", Pokemon!);
             if (result)
             {
                 CapturedPokemons.Add(Pokemon!);
                 IsSignup = false;
             }
+
+            await ChangeLoading.Invoke(false);
         }
+
         StateHasChanged();
     }
 
@@ -167,7 +176,7 @@
                 Age = UserAge,
                 CapturedPokemons = Pokemon != null ? [Pokemon] : []
             };
-
+            await ChangeLoading.Invoke(true);
             var result = await WebClientService.PostAsync<MasterPokemonDto, int>("MasterPokemon/AddMasterPokemon", masterPokemon);
             if (result > 0)
             {
@@ -176,6 +185,9 @@
                 IsSignup = false;
                 CapturedPokemons.Add(Pokemon!);
             }
+
+            await ChangeLoading.Invoke(false);
+            StateHasChanged();
         }
     }
 

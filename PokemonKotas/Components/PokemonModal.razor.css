@@ -46,10 +46,11 @@
     display: block;
     border-radius: 50%;
     border: 3px solid #007bff;
+    background-color: #fff;
 }
 
 .modal-content {
-    background-color: #ffcc00;
+    background-color: #d6d76f;
     border: 3px solid #ff8c00;
     border-radius: 20px;
     transform-origin: center;
@@ -63,6 +64,8 @@
     color: #007bff;
     font-weight: bold;
     font-size: 2rem;
+    border-radius: 32% 0%;
+    padding: 5px;
 }
 
 .modal-body {
@@ -84,8 +87,108 @@
 
 .list-group-item {
     background-color: #ffe680;
+    padding: 0.1rem 1rem;
 }
 
 .badge {
     font-size: 1rem;
+}
+
+.mythical {
+    background: linear-gradient(135deg, #6a0dad, #ff0066, #33ccff, #00ff99);
+    background-size: 300% 300%;
+    animation: mythicalGradient 6s ease infinite;
+}
+
+.legendary {
+    background: linear-gradient(45deg, #815806, #fad58b, #d1ac62, #b07602);
+    background-size: 300% 300%;
+    animation: legendaryGradient 6s ease infinite;
+}
+
+.shiny-text-mythical {
+    font-weight: bold;
+    color: white !important;
+    background: linear-gradient(to right, #27299d, #7879d9);
+    /*background-clip: text;*/
+    /*-webkit-background-clip: text;*/
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+    .shiny-text-mythical::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+        transform: skewX(-20deg);
+        animation: shine 3s infinite;
+    }
+.shiny-text-legendary {
+    font-weight: bold;
+    color: #27299d !important;
+    background: linear-gradient(to right, #b1d9b1, #8e7f43);
+    /*background-clip: text;*/
+    /*-webkit-background-clip: text;*/
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+    .shiny-text-legendary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+        transform: skewX(-20deg);
+        animation: shine 3s infinite;
+    }
+
+
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+
+    50% {
+        left: 130%;
+    }
+
+    100% {
+        left: 130%;
+    }
+}
+
+@keyframes mythicalGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes legendaryGradient {
+    0% {
+        background-position: 50% 0%;
+    }
+
+    50% {
+        background-position: 50% 100%;
+    }
+
+    100% {
+        background-position: 50% 0%;
+    }
 }
