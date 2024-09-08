@@ -1,0 +1,68 @@
+﻿@using PokemonKotas.Domain.Dto
+@using PokemonKotas.Web.Services
+@inject WebClientService WebClientService
+<div class="modal fade @(IsVisible ? "show" : "")" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <h5 class="modal-title">Ranking TOP 10</h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="CloseModal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="rank-list">
+                    @foreach (var rank in MasterRank)
+                    {
+                        <div class="rank-card">
+                            <div class="rank-header">
+                                <h5>@rank.Name</h5>
+                                <span class="rank-score">Score: @rank.Score</span>
+                            </div>
+                            <div class="rank-body">
+                                <div>
+                                    <strong>Age:</strong> @rank.Age
+                                </div>
+                                <div>
+                                    <strong>Captured:</strong> @rank.CapturedPokemons
+                                </div>
+                                <div>
+                                    <strong>Normal:</strong> @rank.NormalPokemons
+                                </div>
+                                <div>
+                                    <strong>Legendary:</strong> @rank.LegendaryPokemons
+                                </div>
+                                <div>
+                                    <strong>Mythical:</strong> @rank.MythicalPokemons
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (IsVisible)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    private bool IsVisible { get; set; } = false;
+    private List<MasterRankDto>? MasterRank { get; set; } = [];
+
+    public async Task CloseModal()
+    {
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    public async void ShowModal(Func<bool, Task> loading)
+    {
+        await loading.Invoke(true);
+        MasterRank = await WebClientService.GetAsync<List<MasterRankDto>?>("MasterPokemon/GetRank");
+        await loading.Invoke(false);
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+}

@@ -1,0 +1,136 @@
+﻿@keyframes modalEnterBounce {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateY(-300px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.05) translateY(20px);
+    }
+
+    80% {
+        transform: scale(0.98) translateY(-10px);
+    }
+
+    100% {
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes modalExitFadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.7) translateY(100px);
+    }
+}
+
+.modal.fade.show {
+    display: block;
+    opacity: 1;
+    animation: modalEnterBounce 0.6s ease forwards;
+}
+
+.modal.fade:not(.show) {
+    animation: modalExitFadeOut 0.5s ease forwards;
+}
+
+.pokemon-image {
+    max-width: 200px;
+    margin: 0 auto;
+    display: block;
+    border-radius: 50%;
+    border: 3px solid #007bff;
+}
+
+.modal-content {
+    background-color: #ffcc00;
+    border: 3px solid #ff8c00;
+    border-radius: 20px;
+    transform-origin: center;
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-title {
+    color: #007bff;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.modal-body {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.btn-close {
+    background-color: #ff8c00;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+    .btn-close:hover {
+        background-color: #ffcc00;
+    }
+
+.list-group-item {
+    background-color: #ffe680;
+}
+
+.badge {
+    font-size: 1rem;
+}
+
+.rank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.rank-card {
+    background-color: #fff2cc;
+    border: 2px solid #ffcc00;
+    border-radius: 10px;
+    padding: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .rank-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+.rank-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.rank-score {
+    background-color: #ff8c00;
+    color: white;
+    padding: 1px 15px;
+    border-radius: 15px;
+}
+
+.rank-body {
+    font-size: 1rem;
+    color: #333;
+}
+
+    .rank-body div {
+        margin-bottom: 0px;
+    }
