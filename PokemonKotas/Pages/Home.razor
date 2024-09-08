@@ -51,7 +51,7 @@
 
 <ul class="pagination">
     <li class="@(CurrentPage == 1 ? "disabled" : "")">
-        <a href="javascript:void(0);" @onclick="PreviousPage">Previous</a>
+        <a id="PreviousPage" href="javascript:void(0);" @onclick="PreviousPage">Previous</a>
     </li>
 
     @foreach (var i in GetPageNumbers())
@@ -61,7 +61,7 @@
         </li>
     }
     <li class="@(CurrentPage == TotalPages ? "disabled" : "")">
-        <a href="javascript:void(0);" @onclick="NextPage">Next</a>
+        <a id="NextPage" href="javascript:void(0);" @onclick="NextPage">Next</a>
     </li>
 </ul>
 
@@ -156,7 +156,7 @@
     {
         return FilteredPokemons
             .Skip((CurrentPage - 1) * PageSize)
-            .Take(PageSize);
+            .Take(PageSize) ?? [];
     }
 
     private void GoToPage(int pageNumber)
