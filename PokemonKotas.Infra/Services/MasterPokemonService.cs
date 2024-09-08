@@ -87,6 +87,8 @@ public class MasterPokemonService(IMasterPokemonRepository masterPokemonReposito
                 {
                     PokemonName = p.Name,
                     CapturedDate = p.CapturedDate,
+                    IsMythical = p.IsMythical,
+                    IsLegendary = p.IsLegendary,
                     Sprites = p.Sprites.Select(s => new PokemonSprite { SpriteBase64 = s }).ToList(),
                     Abilities = p.Abilities.Select(a => new PokemonAbility { Id = a.Id, Name = a.Name }).ToList(),
                     Evolutions = p.EvolutionChain.Select(e => new PokemonEvolution
