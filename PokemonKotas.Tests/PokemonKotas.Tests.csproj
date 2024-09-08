@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="bunit" Version="1.31.3" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="Moq" Version="4.20.71" />
@@ -16,7 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PokemonKotas.Api\PokemonKotas.Api.csproj" />
+    <ProjectReference Include="..\PokemonKotas.Data\PokemonKotas.Data.csproj" />
+    <ProjectReference Include="..\PokemonKotas.Domain\PokemonKotas.Domain.csproj" />
     <ProjectReference Include="..\PokemonKotas.Infra\PokemonKotas.Infra.csproj" />
+    <ProjectReference Include="..\PokemonKotas\PokemonKotas.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
