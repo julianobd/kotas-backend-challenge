@@ -7,7 +7,7 @@ namespace PokemonKotas.Data.Repositories;
 /// <summary>
 /// </summary>
 /// <param name="dbContext"></param>
-public class MasterPokemonRepository(MasterPokemonDbContext dbContext)
+public class MasterPokemonRepository(MasterPokemonDbContext dbContext) : IMasterPokemonRepository
 {
     /// <summary>
     ///     Asynchronously retrieves a master Pokémon by its unique identifier.
