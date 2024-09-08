@@ -63,7 +63,6 @@ app.MapScalarApiReference(options =>
     
     options.WithTitle("Pokemon Kotas")
         .WithTheme(ScalarTheme.Moon)
-        .WithCdnUrl("")
         .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
 });
 
