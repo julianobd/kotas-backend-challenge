@@ -17,7 +17,7 @@ builder.Services.AddPokemonClient()
     .ConfigureHttpClient(client => client.BaseAddress = new Uri("https://beta.pokeapi.co/graphql/v1beta"));
 builder.Services.AddSingleton(sp => new HttpClient
 {
-    BaseAddress = new Uri("https://backend-pokemon.deiro.dev.br/")
+    BaseAddress = new Uri("https://localhost:5051")
 });
 builder.Services.AddSingleton<WebClientService>();
 builder.Services.AddSingleton<IMemoryCache, MemoryCache>(x =>
