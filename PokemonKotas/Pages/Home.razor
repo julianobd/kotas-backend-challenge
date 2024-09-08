@@ -91,7 +91,7 @@
     private int TotalPages => (int)Math.Ceiling((double)FilteredPokemons.Count() / PageSize);
     private int MaxVisiblePages { get; } = 5;
     private bool IsLoading { get; set; }
-
+    private int? MasterId { get; set; }
     protected override async Task OnInitializedAsync()
     {
         ListPokemons = (await PokemonService.GetAllPokemons()).ToList();
@@ -100,14 +100,22 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var masterId = await SessionService.GetMasterId();
-        if (masterId != null)
+        await UpdateCaptured();
+    }
+
+    private async Task UpdateCaptured()
+    {
+        if (MasterId == null)
         {
-            var masterPokemonDto = await WebClientService.GetAsync<MasterPokemonDto>($"MasterPokemon/Get/{masterId}");
-            if (masterPokemonDto is not null && masterPokemonDto.CapturedPokemons.Any())
+            MasterId = await SessionService.GetMasterId();
+            if (MasterId != null)
             {
-                CapturedPokemons = masterPokemonDto.CapturedPokemons;
-                StateHasChanged();
+                var masterPokemonDto = await WebClientService.GetAsync<MasterPokemonDto>($"MasterPokemon/Get/{MasterId}");
+                if (masterPokemonDto is not null && masterPokemonDto.CapturedPokemons.Any())
+                {
+                    CapturedPokemons = masterPokemonDto.CapturedPokemons;
+                    StateHasChanged();
+                }
             }
         }
     }
@@ -123,10 +131,10 @@
         PokemonModal?.ShowModal(pokemon, CapturedPokemons, CallbackOnClose, SetLoading);
     }
 
-    private Task CallbackOnClose()
+    private async Task CallbackOnClose()
     {
+        await UpdateCaptured();
         StateHasChanged();
-        return Task.CompletedTask;
     }
 
     private Task SetLoading(bool value)
