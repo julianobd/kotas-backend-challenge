@@ -1,49 +1,87 @@
-# Backend Challenge - Pokémons
+# PokemonKotas
 
-## Introdução
+PokemonKotas é um projeto que simula uma Pokédex, permitindo a captura, listagem e gerenciamento de Pokémons e seus mestres.
 
-Este é um teste para que possamos ver as suas habilidades como Front Developer.
+## Tecnologias Utilizadas
 
-Nesse teste você deverá desenvolver um projeto para listar pokémons, utilizando como base a API [https://pokeapi.co/](https://pokeapi.co/ "https://pokeapi.co/").
+- **Linguagem**: C#
+- **Framework**: .NET 9 (preview)
+- **Banco de Dados**: SQLite
+- **Front-end**: Blazor WebAssembly
+- **Back-end**: ASP.NET Core API
+- **Testes**: xUnit, Moq, bUnit
+- **Outras Bibliotecas**: 
+1. Entity Framework Core
+	- Code first
+2. Blazored SessionStorage
+	- Para armazenamento do Id do mestre pokémon no Session Storage
+3. StrawberryShake
+	- Para consulta GraphQL do pokeapi.co < decidi utilizar essa tecnologia para evitar fazer vários requests para conseguir as informações
+4. Microsoft.Extensions.Caching.Memory
+	- Adicionei cache in-memory para evitar consumir muitos recursos durante a consulta, então faço um fetch de todos os 151 pokémons e consulto somente em cache após a primeira requisição.
+5. Scalar
+	- Provavelmente será o novo substituto do swagger..
 
-[SPOILER] As instruções de entrega e apresentação do teste estão no final deste Readme (=
+Utilizei DDD e compartilhei as bibliotecas entre o projeto do front-end e o projeto do back-end.
 
-### Antes de começar
- 
-- O projeto deve utilizar a Linguagem específica na avaliação. Por exempo: C#
-- Considere como deadline da avaliação a partir do início do teste. Caso tenha sido convidado a realizar o teste e não seja possível concluir dentro deste período, avise a pessoa que o convidou para receber instruções sobre o que fazer.
-- Documentar todo o processo de investigação para o desenvolvimento da atividade (README.md no seu repositório); os resultados destas tarefas são tão importantes do que o seu processo de pensamento e decisões à medida que as completa, por isso tente documentar e apresentar os seus hipóteses e decisões na medida do possível.
+## Instalação e Uso
 
-## Backend-end
+### Pré-requisitos
 
-- Get para 10 Pokémon aleatórios
-- GetByID para 1 Pokémon específico
-- Cadastro do mestre pokemon (dados básicos como nome, idade e cpf) em SQLite4 - Post para informar que um Pokémon foi capturado.5 - Listagem dos Pokémon já capturados.
-  
+- .NET 9 SDK
+- Visual Studio 2022 ou superior
 
-### Requisitos
+### Passos para Instalação
 
-1 - Todas elas devem retornar os dados básicos do Pokémon, suas evoluções e o base64 de sprite default de cada Pokémon.
+1. **Clone o repositório**:
 
+```
+git clone https://github.com/seu-usuario/pokemonkotas.git
+cd pokemonkotas
+```
 
-## Readme do Repositório
+2. **Restaure as dependências**:
+```
+dotnet restore
+```
 
-- Deve conter o título do projeto
-- Uma descrição sobre o projeto em frase
-- Deve conter uma lista com linguagem, framework e/ou tecnologias usadas
-- Como instalar e usar o projeto (instruções)
-- Não esqueça o [.gitignore](https://www.toptal.com/developers/gitignore)
-- Se está usando github pessoal, referencie que é um challenge by coodesh:  
+3. **Configure o banco de dados** (opcional):
+    - Navegue até o projeto `PokemonKotas.Data` e aplique as migrações:
+```
+cd PokemonKotas.Data
+dotnet ef database update
+```
 
->  This is a challenge by [Coodesh](https://coodesh.com/)
+### Executando o Projeto
 
-## Finalização e Instruções para a Apresentação
+1. **Inicie a API**:
+```
+cd ../PokemonKotas.Api
+dotnet run
+```
+2. **Inicie o Front-end**:
+```
+cd ../PokemonKotas.Web
+dotnet run
+```
+3. **Acesse a aplicação**:
+    - Abra o navegador e acesse `http://localhost:4040` ou `https://localhost:4041`.
 
-1. Adicione o link do repositório com a sua solução no teste
-2. Adicione o link da apresentação do seu projeto no README.md.
-3. Verifique se o Readme está bom e faça o commit final em seu repositório;
-4. Envie e aguarde as instruções para seguir. Sucesso e boa sorte. =)
+### Executando os Testes
 
-## Suporte
+1. **Navegue até o projeto de testes**:
+```
+cd ../PokemonKotas.Tests
+```
+2. **Execute os testes**:
+```
+dotnet test
+```
+### Aplicação em execução
+Fiz deploy de demonstração, vou deixar ativos por alguns dias.
+https://front-pokemon.deiro.dev.br/
+https://backend-pokemon.deiro.dev.br/scalar/v1
 
-Use a [nossa comunidade](https://discord.gg/rdXbEvjsWu) para tirar dúvidas sobre o processo ou envie uma mensagem diretamente a um especialista no chat da plataforma. 
+That's all folks!
+
+>This is a challenge by [Coodesh](https://coodesh.com/)
