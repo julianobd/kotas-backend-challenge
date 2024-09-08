@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PokemonKotas.Data.Context;
 
@@ -10,9 +11,11 @@ using PokemonKotas.Data.Context;
 namespace PokemonKotas.Data.Migrations
 {
     [DbContext(typeof(MasterPokemonDbContext))]
-    partial class MasterPokemonDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240908000056_AddingLegendaryMythicalToCapturedPokemon")]
+    partial class AddingLegendaryMythicalToCapturedPokemon
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");

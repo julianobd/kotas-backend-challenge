@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonKotas.Infra", "Pokem
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonKotas.Tests", "PokemonKotas.Tests\PokemonKotas.Tests.csproj", "{BDAE3239-C446-422F-A1B4-C257B5480681}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonKotas.Api", "PokemonKotas.Api\PokemonKotas.Api.csproj", "{FC076D01-47E3-4396-ACAC-7016ED9E0159}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokemonKotas.Api", "PokemonKotas.Api\PokemonKotas.Api.csproj", "{FC076D01-47E3-4396-ACAC-7016ED9E0159}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

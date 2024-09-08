@@ -1,8 +1,6 @@
-using System.Security.Authentication;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using PokemonKotas.Data.Context;
-using PokemonKotas.Data.Models;
 using PokemonKotas.Data.Repositories;
 using PokemonKotas.Domain.Interfaces;
 using PokemonKotas.Infra.Services;
@@ -11,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
 builder.Services.AddHttpClient();
@@ -57,9 +55,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseCors("AllowSpecificOrigins");
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
 app.Run();

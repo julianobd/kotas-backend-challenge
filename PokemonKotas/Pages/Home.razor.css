@@ -1,5 +1,4 @@
-﻿/* Centralizando o campo de busca */
-.search-container {
+﻿.search-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -7,7 +6,6 @@
     margin-bottom: 40px;
 }
 
-/* Caixa de busca estilizada */
 .search-box {
     max-width: 300px;
     width: 100%;
@@ -48,7 +46,6 @@
         transform: scale(1.05);
     }
 
-/* Título estilizado */
 h1 {
     font-size: 3rem;
     color: #fff;
@@ -68,7 +65,6 @@ h1 {
     }
 }
 
-/* Estilo de paginação */
 .pagination {
     display: flex;
     justify-content: center;
@@ -111,17 +107,94 @@ h1 {
         border-color: #ddd;
     }
 
-/* Animação dos Pokémon Cards */
+.mythical {
+    background: linear-gradient(135deg, #6a0dad, #ff0066, #33ccff, #00ff99);
+    background-size: 300% 300%;
+    animation: mythicalGradient 6s ease infinite;
+}
+
+.legendary {
+    background: linear-gradient(45deg, #815806, #fad58b, #d1ac62, #b07602);
+    background-size: 300% 300%;
+    animation: legendaryGradient 6s ease infinite;
+}
+
+.shiny-text {
+    font-weight: bold;
+    color: #fff !important;
+    background: linear-gradient(to right, #ffcc00, #ffcc00);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+    .shiny-text::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+        transform: skewX(-20deg);
+        animation: shine 3s infinite;
+    }
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+
+    50% {
+        left: 130%;
+    }
+
+    100% {
+        left: 130%;
+    }
+}
+
+@keyframes mythicalGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes legendaryGradient {
+    0% {
+        background-position: 50% 0%;
+    }
+
+    50% {
+        background-position: 50% 100%;
+    }
+
+    100% {
+        background-position: 50% 0%;
+    }
+}
+
 .pokemon-card {
-    width: 150px;
+    width: 180px;
     margin: 15px;
     text-align: center;
-    border: 3px solid #ff8c00;
+    border: 3px solid #ffff00;
     border-radius: 20px;
     padding: 10px;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #ffcc00;
+    background-color: #d6d76f;
 }
 
     .pokemon-card:hover {
@@ -205,3 +278,98 @@ h1 {
 .badge {
     font-size: 1rem;
 }
+
+.pokemon-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* Fundo branco com leve transparência */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Certifique-se de que o loading fique sobre todos os outros elementos */
+    font-family: 'Arial', sans-serif;
+}
+
+.pokeball {
+    width: 100px;
+    height: 100px;
+    background: white;
+    border-radius: 50%;
+    border: 5px solid black;
+    position: relative;
+    animation: spin 2s infinite linear;
+}
+
+    .pokeball::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        background: red;
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+        border-bottom: 5px solid black;
+        transform: translateY(-50%);
+    }
+
+    .pokeball::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        background: white;
+        border: 5px solid black;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+.pokemon-loader p {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.show-trainers-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.btn-show-trainers {
+    background-color: #ffcc00;
+    color: #333;
+    border: 3px solid #ff8c00;
+    border-radius: 50px;
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    cursor: pointer;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    animation: popIn 1s ease-in-out;
+}
+
+    .btn-show-trainers:hover {
+        background-color: #ff8c00;
+        color: white;
+        transform: scale(1.1);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    }
