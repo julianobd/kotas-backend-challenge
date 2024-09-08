@@ -113,9 +113,10 @@
         }
     }
 
-    private async Task ShowRanking()
+    private Task ShowRanking()
     {
         TrainersModal?.ShowModal(SetLoading);
+        return Task.CompletedTask;
     }
 
     private void ShowPokemonModal(PokemonDto pokemon)
@@ -123,15 +124,17 @@
         PokemonModal?.ShowModal(pokemon, CapturedPokemons, CallbackOnClose, SetLoading);
     }
 
-    private async Task CallbackOnClose()
+    private Task CallbackOnClose()
     {
         StateHasChanged();
+        return Task.CompletedTask;
     }
 
-    private async Task SetLoading(bool value)
+    private Task SetLoading(bool value)
     {
         IsLoading = value;
         StateHasChanged();
+        return Task.CompletedTask;
     }
 
 

@@ -1,19 +1,52 @@
 ﻿using PokemonKotas.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PokemonKotas.Data.Repositories
+namespace PokemonKotas.Data.Repositories;
+
+/// <summary>
+/// </summary>
+public interface IMasterPokemonRepository
 {
-    public interface IMasterPokemonRepository
-    {
-        Task<MasterPokemon?> GetMasterPokemonByIdAsync(int Id);
-        Task<List<MasterPokemon>?> GetAllRanking();
-        Task<int> AddMasterPokemonAsync(MasterPokemon masterPokemon);
-        Task<bool> AddCapturedPokemon(int masterPokemonId, CapturedPokemon pokemon);
-        Task<List<MasterPokemon>?> GetAllMasters();
-        Task Clear();
-    }
+    /// <summary>
+    /// </summary>
+    /// <param name="Id"></param>
+    /// <returns></returns>
+    Task<MasterPokemon?> GetMasterPokemonByIdAsync(int Id);
+
+    /// <summary>
+    /// </summary>
+    /// <returns></returns>
+    Task<List<MasterPokemon>?> GetAllRanking();
+
+    /// <summary>
+    /// </summary>
+    /// <param name="masterPokemon"></param>
+    /// <returns></returns>
+    Task<int> AddMasterPokemonAsync(MasterPokemon masterPokemon);
+
+    /// <summary>
+    ///     Adds a captured Pokémon to the specified master Pokémon's collection.
+    /// </summary>
+    /// <param name="masterPokemonId">The ID of the master Pokémon to which the captured Pokémon will be added.</param>
+    /// <param name="pokemon">The captured Pokémon to be added.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains a boolean value indicating whether
+    ///     the operation was successful.
+    /// </returns>
+    Task<bool> AddCapturedPokemon(int masterPokemonId, CapturedPokemon pokemon);
+
+    /// <summary>
+    ///     Retrieves a list of all master Pokémon trainers from the database.
+    /// </summary>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains a list of
+    ///     <see cref="MasterPokemon" /> objects, or <c>null</c> if no master Pokémon trainers are found.
+    /// </returns>
+    Task<List<MasterPokemon>?> GetAllMasters();
+
+    /// <summary>
+    ///     Asynchronously clears all data from the database, including master Pokémon, captured Pokémon,
+    ///     Pokémon abilities, Pokémon evolutions, and Pokémon sprites.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task Clear();
 }

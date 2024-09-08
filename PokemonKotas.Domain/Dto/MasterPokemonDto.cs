@@ -21,7 +21,7 @@ public class MasterPokemonDto
     /// <value>
     ///     The name of the master Pokémon trainer.
     /// </value>
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>
     ///     Gets or sets the age of the master Pokémon trainer.

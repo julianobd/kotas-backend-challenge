@@ -22,7 +22,7 @@ public class PokemonSprite
     /// <summary>
     ///     Gets or sets the Base64 encoded image data of the Pokémon sprite.
     /// </summary>
-    public string SpriteBase64 { get; set; }
+    public string SpriteBase64 { get; set; } = null!;
 
     /// <summary>
     ///     Gets or sets the captured Pokémon associated with this sprite.

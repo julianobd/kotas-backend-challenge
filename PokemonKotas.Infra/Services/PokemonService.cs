@@ -57,19 +57,19 @@ public class PokemonService(
     private async ValueTask<IEnumerable<PokemonDto>> RetrieveAllPokemons()
     {
         var pokemons = await cacheService.GetPokemons(pokemonClient);
-        return pokemons.Data.Pokemon_v2_pokemon.Select(x => new PokemonDto
+        return pokemons!.Data!.Pokemon_v2_pokemon.Select(x => new PokemonDto
         {
             Id = x.Id,
             Name = x.Name,
-            IsLegendary = x.Pokemon_v2_pokemonspecy.Pokemon_v2_evolutionchain.Pokemon_v2_pokemonspecies
-                .FirstOrDefault(y => y.Id == x.Id).Is_legendary,
+            IsLegendary = x.Pokemon_v2_pokemonspecy!.Pokemon_v2_evolutionchain!.Pokemon_v2_pokemonspecies
+                .FirstOrDefault(y => y.Id == x.Id)!.Is_legendary,
             IsMythical = x.Pokemon_v2_pokemonspecy.Pokemon_v2_evolutionchain.Pokemon_v2_pokemonspecies
-                .FirstOrDefault(y => y.Id == x.Id).Is_mythical,
-            Sprites = x.Pokemon_v2_pokemonsprites.Where(y => y.Sprites != null).Select(y => y.Sprites).ToList(),
+                .FirstOrDefault(y => y.Id == x.Id)!.Is_mythical,
+            Sprites = x.Pokemon_v2_pokemonsprites.Where(y => y.Sprites != null).Select(y => y.Sprites).ToList()!,
             Abilities = x.Pokemon_v2_pokemonabilities.Select(y => new PokemonAbilityDto
             {
-                Id = y.Pokemon_v2_ability.Id,
-                Name = y.Pokemon_v2_ability?.Name
+                Id = y.Pokemon_v2_ability!.Id,
+                Name = y.Pokemon_v2_ability?.Name!
             }).ToList(),
             EvolutionChain = x.Pokemon_v2_pokemonspecy.Pokemon_v2_evolutionchain.Pokemon_v2_pokemonspecies.Select(
                 y => new PokemonEvolutionChainDto
@@ -81,7 +81,7 @@ public class PokemonService(
                     Order = y.Order,
                     Sprites = y.Pokemon_v2_pokemons.SelectMany(z => z.Pokemon_v2_pokemonsprites)
                         .Where(z => z.Sprites != null)
-                        .Select(z => z.Sprites).ToList()
+                        .Select(z => z.Sprites).ToList()!
                 }).ToList()
         }).OrderBy(x => x.Id);
     }

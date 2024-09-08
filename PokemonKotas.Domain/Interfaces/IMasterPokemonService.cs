@@ -16,7 +16,7 @@ public interface IMasterPokemonService
     ///     A task that represents the asynchronous operation. The task result contains the
     ///     <see cref="MasterPokemonDto" /> if found; otherwise, <c>null</c>.
     /// </returns>
-    Task<MasterPokemonDto> GetMasterById(int id);
+    Task<MasterPokemonDto?> GetMasterById(int id);
 
     /// <summary>
     ///     Adds a new master Pokémon to the repository asynchronously.

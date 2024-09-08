@@ -25,7 +25,7 @@ public class MasterPokemon
     ///     A string representing the name of the master Pokémon trainer. The maximum length is 300 characters.
     /// </value>
     [MaxLength(300)]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     /// <summary>
     ///     Gets or sets the age of the Master Pokemon.

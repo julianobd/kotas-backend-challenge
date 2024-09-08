@@ -55,7 +55,7 @@ public class CapturedPokemon
     /// <value>
     ///     A list of <see cref="PokemonSprite" /> objects representing the visual representations of the captured Pokémon.
     /// </value>
-    public List<PokemonSprite> Sprites { get; set; }
+    public List<PokemonSprite> Sprites { get; set; } = [];
 
     /// <summary>
     ///     Gets or sets the list of abilities that the captured Pokémon possesses.
@@ -63,7 +63,7 @@ public class CapturedPokemon
     /// <value>
     ///     A list of <see cref="PokemonAbility" /> objects representing the abilities of the captured Pokémon.
     /// </value>
-    public List<PokemonAbility> Abilities { get; set; }
+    public List<PokemonAbility> Abilities { get; set; } = [];
 
     /// <summary>
     ///     Gets or sets the list of evolutions for the captured Pokémon.
@@ -71,7 +71,7 @@ public class CapturedPokemon
     /// <value>
     ///     A list of <see cref="PokemonEvolution" /> objects representing the evolutions of the captured Pokémon.
     /// </value>
-    public List<PokemonEvolution> Evolutions { get; set; }
+    public List<PokemonEvolution> Evolutions { get; set; } = [];
 
     /// <summary>
     ///     Gets or sets the master Pokémon trainer who captured this Pokémon.

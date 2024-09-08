@@ -28,7 +28,7 @@ public class MasterPokemonService(IMasterPokemonRepository masterPokemonReposito
     /// </returns>
     /// <exception cref="ArgumentException">Thrown when the <paramref name="id" /> is less than or equal to zero.</exception>
     /// <exception cref="Exception">Thrown when an error occurs while retrieving the master Pokémon.</exception>
-    public async Task<MasterPokemonDto> GetMasterById(int id)
+    public async Task<MasterPokemonDto?> GetMasterById(int id)
     {
         var masterPokemon = await masterPokemonRepository.GetMasterPokemonByIdAsync(id);
         if (masterPokemon == null) return null;
@@ -168,7 +168,7 @@ public class MasterPokemonService(IMasterPokemonRepository masterPokemonReposito
                 Name = p.PokemonName,
                 CapturedDate = p.CapturedDate,
                 Sprites = p.Sprites.Select(s => s.SpriteBase64).ToList(),
-                Abilities = p.Abilities.Select(a => new PokemonAbilityDto { Id = a.Id, Name = a.Name }).ToList(),
+                Abilities = p.Abilities.Select(a => new PokemonAbilityDto { Id = a.Id, Name = a.Name ?? string.Empty }).ToList(),
                 EvolutionChain = p.Evolutions.Select(e => new PokemonEvolutionChainDto
                 {
                     Id = e.Id,
