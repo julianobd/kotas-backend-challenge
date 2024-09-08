@@ -85,7 +85,6 @@ public class MasterPokemonController(IMasterPokemonService service) : Controller
         try
         {
             masterPokemon.ResetIds();
-            await service.Clear();
             var result = await service.AddMasterPokemonAsync(masterPokemon);
             if (result > 0) return Ok(result);
             return StatusCode(304);
