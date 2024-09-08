@@ -6,9 +6,28 @@ using PokemonKotas.Domain.Interfaces;
 
 namespace PokemonKotas.Infra.Services;
 
+/// <summary>
+///     Service class responsible for managing master Pokémon entities.
+/// </summary>
+/// <param name="masterPokemonRepository">
+///     Repository for accessing master Pokémon data.
+/// </param>
+/// <param name="httpClient">
+///     HTTP client for making external API calls.
+/// </param>
 public class MasterPokemonService(MasterPokemonRepository masterPokemonRepository, HttpClient httpClient)
     : IMasterPokemonService
 {
+    /// <summary>
+    ///     Retrieves a master Pokémon by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the master Pokémon.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains the
+    ///     <see cref="MasterPokemonDto" /> if found; otherwise, <c>null</c>.
+    /// </returns>
+    /// <exception cref="ArgumentException">Thrown when the <paramref name="id" /> is less than or equal to zero.</exception>
+    /// <exception cref="Exception">Thrown when an error occurs while retrieving the master Pokémon.</exception>
     public async Task<MasterPokemonDto> GetMasterById(int id)
     {
         var masterPokemon = await masterPokemonRepository.GetMasterPokemonByIdAsync(id);
@@ -44,6 +63,17 @@ public class MasterPokemonService(MasterPokemonRepository masterPokemonRepositor
         return masterPokemonDto;
     }
 
+    /// <summary>
+    ///     Adds a new master Pokémon asynchronously.
+    /// </summary>
+    /// <param name="masterPokemon">
+    ///     The master Pokémon data transfer object containing details of the master Pokémon to be
+    ///     added.
+    /// </param>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains the identifier of the added master
+    ///     Pokémon.
+    /// </returns>
     public async Task<int> AddMasterPokemonAsync(MasterPokemonDto masterPokemon)
     {
         var json = JsonSerializer.Serialize(masterPokemon);
@@ -73,6 +103,20 @@ public class MasterPokemonService(MasterPokemonRepository masterPokemonRepositor
         return result;
     }
 
+    /// <summary>
+    ///     Retrieves the ranking of master Pokémon trainers based on their captured Pokémon.
+    /// </summary>
+    /// <param name="ammount">
+    ///     The number of top-ranked master Pokémon trainers to return. Defaults to 10.
+    /// </param>
+    /// <returns>
+    ///     A list of <see cref="MasterRankDto" /> representing the top-ranked master Pokémon trainers, or null if no data is
+    ///     available.
+    /// </returns>
+    /// <remarks>
+    ///     The ranking is determined by calculating a score for each master Pokémon trainer based on the number and types of
+    ///     Pokémon they have captured.
+    /// </remarks>
     public async Task<List<MasterRankDto>?> GetRanking(int ammount = 10)
     {
         var allMasters = await masterPokemonRepository.GetAllRanking();
@@ -95,6 +139,18 @@ public class MasterPokemonService(MasterPokemonRepository masterPokemonRepositor
         return ranking;
     }
 
+    /// <summary>
+    ///     Retrieves a list of all master Pokémon trainers.
+    /// </summary>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains a list of
+    ///     <see cref="MasterPokemonDto" /> objects representing the master Pokémon trainers, or <c>null</c> if no trainers are
+    ///     found.
+    /// </returns>
+    /// <remarks>
+    ///     This method fetches all master Pokémon trainers from the repository and maps them to
+    ///     <see cref="MasterPokemonDto" /> objects, including their captured Pokémon and related details.
+    /// </remarks>
     public async Task<List<MasterPokemonDto>?> GetAllMasters()
     {
         var masterPokemons = await masterPokemonRepository.GetAllMasters();
@@ -125,6 +181,15 @@ public class MasterPokemonService(MasterPokemonRepository masterPokemonRepositor
         return masterPokemonDtos;
     }
 
+    /// <summary>
+    ///     Adds a captured Pokémon to the repository for a specific master Pokémon.
+    /// </summary>
+    /// <param name="masterPokemonId">The ID of the master Pokémon to which the captured Pokémon will be added.</param>
+    /// <param name="pokemon">The details of the captured Pokémon to be added.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains a boolean value indicating whether
+    ///     the operation was successful.
+    /// </returns>
     public async Task<bool> AddCapturedPokemonAsync(int masterPokemonId, PokemonDto pokemon)
     {
         await DownloadSpriteAsBase64UpdatingPokemonDto(pokemon);
@@ -149,6 +214,10 @@ public class MasterPokemonService(MasterPokemonRepository masterPokemonRepositor
         return result;
     }
 
+    /// <summary>
+    ///     Clears all master Pokémon data from the repository.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous clear operation.</returns>
     public async Task Clear()
     {
         await masterPokemonRepository.Clear();

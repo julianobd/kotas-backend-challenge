@@ -10,9 +10,13 @@ namespace PokemonKotas.Data.Repositories;
 public class MasterPokemonRepository(MasterPokemonDbContext dbContext)
 {
     /// <summary>
+    ///     Asynchronously retrieves a master Pokémon by its unique identifier.
     /// </summary>
-    /// <param name="Id"></param>
-    /// <returns></returns>
+    /// <param name="Id">The unique identifier of the master Pokémon.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains the master Pokémon if found;
+    ///     otherwise, null.
+    /// </returns>
     public async Task<MasterPokemon?> GetMasterPokemonByIdAsync(int Id)
     {
         return await dbContext.MasterPokemons.AsNoTracking()
@@ -22,6 +26,13 @@ public class MasterPokemonRepository(MasterPokemonDbContext dbContext)
             .Where(x => x.Id == Id).FirstOrDefaultAsync();
     }
 
+    /// <summary>
+    ///     Asynchronously retrieves a list of all master Pokémon along with their captured Pokémon.
+    /// </summary>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains a list of all master Pokémon with
+    ///     their captured Pokémon, or null if no master Pokémon are found.
+    /// </returns>
     public async Task<List<MasterPokemon>?> GetAllRanking()
     {
         return await dbContext.MasterPokemons.AsNoTracking()
@@ -29,6 +40,11 @@ public class MasterPokemonRepository(MasterPokemonDbContext dbContext)
             .ToListAsync();
     }
 
+    /// <summary>
+    ///     Adds a new master Pokémon to the database asynchronously.
+    /// </summary>
+    /// <param name="masterPokemon">The master Pokémon entity to be added.</param>
+    /// <returns>The ID of the added master Pokémon if the operation is successful; otherwise, 0.</returns>
     public async Task<int> AddMasterPokemonAsync(MasterPokemon masterPokemon)
     {
         dbContext.MasterPokemons.Add(masterPokemon);
@@ -38,6 +54,15 @@ public class MasterPokemonRepository(MasterPokemonDbContext dbContext)
         return 0;
     }
 
+    /// <summary>
+    ///     Adds a captured Pokémon to the specified master Pokémon's collection.
+    /// </summary>
+    /// <param name="masterPokemonId">The ID of the master Pokémon to which the captured Pokémon will be added.</param>
+    /// <param name="pokemon">The captured Pokémon to be added.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains a boolean value indicating whether
+    ///     the operation was successful.
+    /// </returns>
     public async Task<bool> AddCapturedPokemon(int masterPokemonId, CapturedPokemon pokemon)
     {
         var masterPokemon = await dbContext.MasterPokemons.Include(x => x.CapturedPokemons)
@@ -47,11 +72,23 @@ public class MasterPokemonRepository(MasterPokemonDbContext dbContext)
         return await dbContext.SaveChangesAsync() > 0;
     }
 
+    /// <summary>
+    ///     Retrieves a list of all master Pokémon trainers from the database.
+    /// </summary>
+    /// <returns>
+    ///     A task that represents the asynchronous operation. The task result contains a list of
+    ///     <see cref="MasterPokemon" /> objects, or <c>null</c> if no master Pokémon trainers are found.
+    /// </returns>
     public async Task<List<MasterPokemon>?> GetAllMasters()
     {
         return await dbContext.MasterPokemons.AsNoTracking().ToListAsync();
     }
 
+    /// <summary>
+    ///     Asynchronously clears all data from the database, including master Pokémon, captured Pokémon,
+    ///     Pokémon abilities, Pokémon evolutions, and Pokémon sprites.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task Clear()
     {
         dbContext.PokemonSprite.RemoveRange(dbContext.PokemonSprite);
@@ -59,12 +96,6 @@ public class MasterPokemonRepository(MasterPokemonDbContext dbContext)
         dbContext.PokemoEvolutions.RemoveRange(dbContext.PokemoEvolutions);
         dbContext.CapturedPokemons.RemoveRange(dbContext.CapturedPokemons);
         dbContext.MasterPokemons.RemoveRange(dbContext.MasterPokemons);
-        /*
-        await dbContext.Database.ExecuteSqlRawAsync("DELETE FROM PokemonSprite");
-        await dbContext.Database.ExecuteSqlRawAsync("DELETE FROM PokemonAbilities");
-        await dbContext.Database.ExecuteSqlRawAsync("DELETE FROM PokemonEvolutions");
-        await dbContext.Database.ExecuteSqlRawAsync("DELETE FROM CapturedPokemon");
-        await dbContext.Database.ExecuteSqlRawAsync("DELETE FROM MasterPokemon");*/
         await dbContext.SaveChangesAsync();
     }
 }

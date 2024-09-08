@@ -50,12 +50,23 @@
     private bool IsVisible { get; set; } = false;
     private List<MasterRankDto>? MasterRank { get; set; } = [];
 
+    /// <summary>
+    ///     Closes the modal by setting the visibility to false and triggering a state change.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task CloseModal()
     {
         IsVisible = false;
         StateHasChanged();
     }
 
+    /// <summary>
+    ///     Displays the modal by setting the visibility to true and fetching the master rank data asynchronously.
+    /// </summary>
+    /// <param name="loading">
+    ///     A function to set the loading state. It takes a boolean parameter indicating whether loading is
+    ///     in progress.
+    /// </param>
     public async void ShowModal(Func<bool, Task> loading)
     {
         await loading.Invoke(true);

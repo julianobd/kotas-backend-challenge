@@ -115,7 +115,13 @@
     private Func<Task> CallbackOnClose { get; set; } = null!;
     private Func<bool, Task> ChangeLoading { get; set; } = null!;
 
-
+    /// <summary>
+    ///     Displays the modal with the specified Pokémon details and captured Pokémon list.
+    /// </summary>
+    /// <param name="pokemon">The Pokémon details to display in the modal.</param>
+    /// <param name="capturedPokemons">The list of captured Pokémon.</param>
+    /// <param name="callbackOnClose">The callback function to invoke when the modal is closed.</param>
+    /// <param name="loading">The function to change the loading state.</param>
     public void ShowModal(PokemonDto pokemon, List<PokemonDto> capturedPokemons, Func<Task> callbackOnClose, Func<bool, Task> loading)
     {
         ChangeLoading = loading;
@@ -137,6 +143,10 @@
         }
     }
 
+    /// <summary>
+    ///     Closes the modal and invokes the callback function provided during the modal's display.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task CloseModal()
     {
         IsVisible = false;

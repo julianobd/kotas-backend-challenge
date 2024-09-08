@@ -2,6 +2,9 @@
 
 namespace PokemonKotas.Domain.Interfaces;
 
+/// <summary>
+///     Defines the contract for Pokémon-related operations.
+/// </summary>
 public interface IPokemonService
 {
     /// <summary>
