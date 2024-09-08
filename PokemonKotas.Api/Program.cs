@@ -32,7 +32,7 @@ builder.Services.AddDbContext<MasterPokemonDbContext>();
 builder.Services.AddScoped<IMasterPokemonService, MasterPokemonService>();
 
 //repositories
-builder.Services.AddScoped<MasterPokemonRepository>();
+builder.Services.AddScoped<IMasterPokemonRepository, MasterPokemonRepository>();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())

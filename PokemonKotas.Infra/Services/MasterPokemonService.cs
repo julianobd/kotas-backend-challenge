@@ -15,7 +15,7 @@ namespace PokemonKotas.Infra.Services;
 /// <param name="httpClient">
 ///     HTTP client for making external API calls.
 /// </param>
-public class MasterPokemonService(MasterPokemonRepository masterPokemonRepository, HttpClient httpClient)
+public class MasterPokemonService(IMasterPokemonRepository masterPokemonRepository, HttpClient httpClient)
     : IMasterPokemonService
 {
     /// <summary>
@@ -225,8 +225,8 @@ public class MasterPokemonService(MasterPokemonRepository masterPokemonRepositor
 
     private decimal CalculateScore(List<CapturedPokemon> capturedPokemons)
     {
-        const decimal legendaryWeight = 3.0m;
-        const decimal mythicalWeight = 2.0m;
+        const decimal legendaryWeight = 2.0m;
+        const decimal mythicalWeight = 3.0m;
         const decimal normalWeight = 1.0m;
 
         var score = capturedPokemons.Sum(p =>

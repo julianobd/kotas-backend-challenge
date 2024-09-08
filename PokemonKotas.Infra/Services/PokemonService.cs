@@ -34,7 +34,7 @@ public class PokemonService(
     {
         var pokemons = await cacheService.GetPokemons(pokemonClient);
         var pokemonDto = (await RetrieveAllPokemons()).OrderBy(x => Guid.NewGuid()).Take(ammount);
-        return pokemonDto;
+        return pokemonDto.ToList();
     }
 
     /// <summary>
