@@ -4,6 +4,7 @@ using PokemonKotas.Data.Context;
 using PokemonKotas.Data.Repositories;
 using PokemonKotas.Domain.Interfaces;
 using PokemonKotas.Infra.Services;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
-
 builder.Services.AddHttpClient();
 
 builder.Services.AddOpenApi();
@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigins",
         corsPolicyBuilder =>
         {
-            corsPolicyBuilder.WithOrigins("https://localhost:7013", "https://front-pokemon.deiro.dev.br")
+            corsPolicyBuilder.WithOrigins("https://localhost:7013", "http://localhost:5022", "https://front-pokemon.deiro.dev.br")
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
@@ -49,12 +49,22 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
 app.UseCors("AllowSpecificOrigins");
-if (app.Environment.IsDevelopment()) app.MapOpenApi();
+app.MapOpenApi();
+
+//if (app.Environment.IsDevelopment()) app.MapOpenApi();
+app.MapScalarApiReference(options =>
+{
+    
+    options.WithTitle("Pokemon Kotas")
+        .WithTheme(ScalarTheme.Moon)
+        .WithCdnUrl("")
+        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+});
 
 app.Run();

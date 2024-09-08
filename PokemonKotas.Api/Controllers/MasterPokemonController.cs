@@ -56,7 +56,7 @@ public class MasterPokemonController(IMasterPokemonService service) : Controller
         {
             var masters = await service.GetMasterById(id); //.ConfigureAwait(false);
             if (masters == null) return NotFound();
-            return Ok(Task.FromResult(masters));
+            return Ok(masters);
         }
         catch (Exception e)
         {

@@ -4,7 +4,8 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		</PropertyGroup>
+		<WasmEnableWebcil>false</WasmEnableWebcil>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />

@@ -73,7 +73,8 @@
 {
     <div class="pokemon-loader">
         <div class="pokeball"></div>
-        <p>Capturando Pokémon...</p>
+        <p>Capturing Pokémon...</p>
+
     </div>
 }
 
@@ -99,16 +100,14 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        var masterId = await SessionService.GetMasterId();
+        if (masterId != null)
         {
-            var masterId = await SessionService.GetMasterId();
-            if (masterId != null)
+            var masterPokemonDto = await WebClientService.GetAsync<MasterPokemonDto>($"MasterPokemon/Get/{masterId}");
+            if (masterPokemonDto is not null && masterPokemonDto.CapturedPokemons.Any())
             {
-                var masterPokemonDto = await WebClientService.GetAsync<MasterPokemonDto>($"MasterPokemon/Get/{masterId}");
-                if (masterPokemonDto is not null && masterPokemonDto.CapturedPokemons.Any())
-                {
-                    CapturedPokemons = masterPokemonDto.CapturedPokemons;
-                }
+                CapturedPokemons = masterPokemonDto.CapturedPokemons;
+                StateHasChanged();
             }
         }
     }
