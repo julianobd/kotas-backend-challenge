@@ -79,8 +79,7 @@ dotnet test
 ```
 ### Aplicação em execução
 Fiz deploy de demonstração, vou deixar ativos por alguns dias.
-- https://front-pokemon.deiro.dev.br/
-- https://backend-pokemon.deiro.dev.br/scalar/v1
+[removido]
 
 That's all folks!
 
